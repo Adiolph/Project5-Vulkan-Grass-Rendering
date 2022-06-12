@@ -5,6 +5,12 @@ project(cis565_project4_vulkan_grass_rendering)
 
 OPTION(USE_D2D_WSI "Build the project using Direct to Display swapchain" OFF)
 
+set(VK_SDK_PATH C:/Users/Fan/devtools/vulkan)
+set(Vulkan_INCLUDE_DIR C:/Users/Fan/devtools/vulkan/Include)
+set(Vulkan_LIBRARY C:/Users/Fan/devtools/vulkan/Lib/vulkan-1.lib)
+
+
+
 find_package(Vulkan REQUIRED)
 
 IF(WIN32)
