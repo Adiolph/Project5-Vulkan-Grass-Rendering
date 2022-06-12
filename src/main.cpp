@@ -106,7 +106,7 @@ int main() {
     VkDeviceMemory grassImageMemory;
     Image::FromFile(device,
         transferCommandPool,
-        "img/grass.jpg",
+        "C:/Users/Fan/source/repos/Grass-Rendering/build/src/images/grass.jpg",
         VK_FORMAT_R8G8B8A8_UNORM,
         VK_IMAGE_TILING_OPTIMAL,
         VK_IMAGE_USAGE_SAMPLED_BIT,
