@@ -4,3 +4,5 @@
 - What is the usual unit in our engine?
 - Why is `RecordComputeCommandBuffer()` called only once at `Render` initialization?
 - Do we need set the `VK_BUFFER_USAGE_VERTEX_BUFFER_BIT` for `culledBladesBuffer`?
+- How to get the coordinate of blades at global corrdinate?
+- GLSL `inverse` vs `transpose`, when can we use transpose?

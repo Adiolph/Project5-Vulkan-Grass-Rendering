@@ -52,6 +52,12 @@ bool inBounds(float value, float bounds) {
     return (value >= -bounds) && (value <= bounds);
 }
 
+bool frustum_test(vec3 point) {
+    vec4 point_proj = camera.proj * camera.view * model * vec4(point, 1.0);
+    point_proj = point_proj / point_proj.w;
+    return inBounds(point_proj.x, 1.1) && inBounds(point_proj.y, 1.1) && inBounds(point_proj.z, 1.1);
+}
+
 void main() {
     // Reset the number of blades to 0
     if (gl_GlobalInvocationID.x == 0) {
@@ -72,10 +78,11 @@ void main() {
     vec3 up = blades[gl_GlobalInvocationID.x].up.xyz;
     float stiffness = blades[gl_GlobalInvocationID.x].up.w; // in this demo, it's 7~13
 
-    // the norm vector that perpendicular to blade surface
+    // the norm vector that perpendicular to blade surface and the other tangent
     vec3 norm = vec3(cos(orientation), 0.0, sin(orientation));
     norm.y = -(up.x * norm.x + up.z * norm.z) / up.y;
     norm = normalize(norm);
+    vec3 tangent = cross(up, norm);
 
     // internal bending
     const float internal_force_factor = 1;
@@ -84,7 +91,7 @@ void main() {
     // gravity force
     const float mass = 1.0;
     const float gravity_const = 10.0;  // the gravity constant
-    vec3 gravity_dir = (transpose(model) * vec4(0.0, -1.0, 0.0, 1.0)).xyz;  // direction of gravity force in model local frame
+    vec3 gravity_dir = (inverse(model) * vec4(0.0, -1.0, 0.0, 1.0)).xyz;  // direction of gravity force in model local frame
     float v02_proj = dot(v2 - v0, norm);
     vec3 gravity_force = gravity_const * mass * gravity_dir;
 
@@ -99,8 +106,8 @@ void main() {
     const float wind_intensity = 7.0;
     // vec3 wind_dir_global = normalize(vec3(1.0, 0.0, cos(direction_change_rate * totalTime) / 4.0));
     vec3 wind_dir_global = vec3(1.0, 0.0, 0.0);
-    vec3 wind_dir_model = (transpose(model) * vec4(wind_dir_global, 1.0)).xyz;
-    vec3 pos_global = (transpose(model) * vec4(v0, 1.0)).xyz;
+    vec3 wind_dir_model = (inverse(model) * vec4(wind_dir_global, 1.0)).xyz;
+    vec3 pos_global = (inverse(model) * vec4(v0, 1.0)).xyz;
     float wind_strength_phase = cos(dot(wind_dir_global, pos_global) / wind_wavelength - intensity_change_rate * totalTime);
     float wind_strength = wind_intensity * (0.5 + 0.5 * wind_strength_phase);
     float wind_surface_factor = 1.0 - 0.7 * dot(wind_dir_model, normalize(v2 - v0));
@@ -129,6 +136,7 @@ void main() {
     vec3 v1_cor = v0 + ratio * (v1_new - v0);
     vec3 v2_cor = v1_cor + ratio * (v2_new - v1_new);
 
+    // set the final position to buffer
     blades[gl_GlobalInvocationID.x].v1 = vec4(v1_cor, height);
     blades[gl_GlobalInvocationID.x].v2 = vec4(v2_cor, weidth);
 
@@ -136,9 +144,28 @@ void main() {
 	// to the culled blades buffer
 	// Note: to do this, you will need to use an atomic operation to read and update numBlades.vertexCount
 	// You want to write the visible blades to the buffer without write conflicts between threads
+    // Done
+
+    // blade orientation cull test
+    vec4 cam_look = inverse(camera.view) * vec4(0.0, 0.0, -1.0, 0.0);
+    bool pass_orientation = abs(dot(cam_look.xyz, tangent)) < 0.7;
+
+    // view frustum cull test
+    vec3 v_middle = 0.25 * v0 + 0.5 * v1_cor + 0.25 * v2_cor;
+    bool pass_frustum = frustum_test(v0) || frustum_test(v_middle) || frustum_test(v2_cor);
+
+    // distance cull test
+    bool pass_distance = false;
+	const float d_max = 15.0;
+	const int n_level = 10;
+    vec4 pos_camera_model = inverse(camera.view) * vec4(0.0, 0.0, 0.0, 1.0);
+    float d_proj = length(v0 - pos_camera_model.xyz - up * dot(v0 - pos_camera_model.xyz, up));
+    if (gl_GlobalInvocationID.x % n_level < n_level * (1 - (d_proj / d_max))) {
+        pass_distance = true;
+    }
 
     // save data
-    if (true) {
+    if (pass_distance && pass_frustum && pass_orientation) {
         uint idx = atomicAdd(numBlades.vertexCount , 1);
         culled[idx] = blades[gl_GlobalInvocationID.x];
     }
