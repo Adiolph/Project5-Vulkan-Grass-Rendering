@@ -1,12 +1,23 @@
-Vulkan Grass Rendering
-==================================
+# Vulkan Grass Rendering
 
-**University of Pennsylvania, CIS 565: GPU Programming and Architecture, Project 5**
+## Results
 
-* (TODO) YOUR NAME HERE
-* Tested on: (TODO) Windows 22, i7-2222 @ 2.22GHz 22GB, GTX 222 222MB (Moore 2222 Lab)
+### Apply scatic force
 
-### (TODO: Your README)
+- An internal bending force makes the blade bend towards the positive norm direction.
+- A gravity force makes the blade bend down.
+- A strentch force make blade strench out towards norm direciton.
+- A recovery force try to make blade straight.
 
-*DO NOT* leave the README to the last minute! It is a crucial part of the
-project, and we will not be able to grade you without a good README.
+![static force](results\only_gravity.png)
+
+### Add wind
+
+- The direction of the wind is along +x direction.
+- The amplitude of wind is represneted by a wavefunction that has wavelength of 5 and period of 3.3.
+
+![static force](results\with_wind.png)
+
+### After culling
+
+![static force](results\after_culling.png)

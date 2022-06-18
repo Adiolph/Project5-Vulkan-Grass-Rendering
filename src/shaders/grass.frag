@@ -16,21 +16,23 @@ layout(location = 0) out vec4 outColor;
 void main() {
 
     // Define shades of green
-    vec4 l_green = vec4(0.1, 0.9, 0.1, 1.0);
-    vec4 d_green = vec4(9.0/255.0, 51.0/255.0, 0.0, 1.0);
+    vec4 light_green = vec4(150.0/255.0, 249.0/255.0, 123/255.0, 1.0);
+    vec4 green = vec4(21.0/255.0, 176.0/255.0, 26.0/255.0, 1.0);
+    vec4 forest_green = vec4(6.0/255.0, 71.0/255.0, 112.0/255.0, 1.0);
+    vec4 grass_green = vec4(63.0/255.0, 155.0/255.0, 11.0/255.0, 1.0);
 
     // grey gradient
     float grey = 0.75;
     float white = 1.0;
 
     // Interpolate green shade
-    float v = f_uv.y;
-    vec4 c1 = (1-v)*d_green + v * l_green;
+    vec4 c1 = mix(green, grass_green, f_uv[1]*f_uv[1]);
 
     // Interpolate brightness
     float u = 2 * abs(f_uv.x - 0.5);
-    float c2 = (1-u)*grey + u * white;
+    float c2 = mix(grey, white, u);
+    // float c2 = 1.0;
 
     // Final color is multiplied
-    outColor = (c1 * c2);
+    outColor = c1 * c2;
 }

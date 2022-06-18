@@ -34,7 +34,7 @@ void main() {
     tengent_1 = normalize(tengent_1);
     vec3 tengent_2 = normalize(cross(normalize(up.xyz), tengent_1));
     
-    // get control points at two bottom sides of the blade
+    // get control points at two base sides of the blade
     float weidth = v2.w;
     vec3 c1 = v0.xyz - weidth / 2.0 * tengent_2;
     vec3 c2 = v0.xyz + weidth / 2.0 * tengent_2;
