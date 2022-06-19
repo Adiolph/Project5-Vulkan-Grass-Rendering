@@ -6,6 +6,8 @@ file(GLOB IMAGES
     ${CMAKE_CURRENT_SOURCE_DIR}/images/*.bmp
 )
 
+configure_file(PathConfig.h.in ${PROJECT_SOURCE_DIR}/src/PathConfig.hh)
+
 foreach(IMAGE ${IMAGES})
     get_filename_component(fname ${IMAGE} NAME)
     configure_file(${IMAGE} ${CMAKE_CURRENT_BINARY_DIR}/images/${fname} COPYONLY)

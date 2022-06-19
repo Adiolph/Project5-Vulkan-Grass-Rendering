@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "Image.h"
+#include "PathConfig.hh"
 
 Device* device;
 SwapChain* swapChain;
@@ -106,7 +107,7 @@ int main() {
     VkDeviceMemory grassImageMemory;
     Image::FromFile(device,
         transferCommandPool,
-        "C:/Users/Fan/source/repos/Grass-Rendering/build/src/images/grass.jpg",
+        std::string(BUILD_DIR) + "/src/images/grass.jpg",
         VK_FORMAT_R8G8B8A8_UNORM,
         VK_IMAGE_TILING_OPTIMAL,
         VK_IMAGE_USAGE_SAMPLED_BIT,

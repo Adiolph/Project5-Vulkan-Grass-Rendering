@@ -5,6 +5,7 @@
 #include "Blades.h"
 #include "Camera.h"
 #include "Image.h"
+#include "PathConfig.hh"
 
 static constexpr unsigned int WORKGROUP_SIZE = 32;
 
@@ -537,8 +538,8 @@ void Renderer::CreateComputeDescriptorSets() {
 }
 
 void Renderer::CreateGraphicsPipeline() {
-    VkShaderModule vertShaderModule = ShaderModule::Create("C:/Users/Fan/source/repos/Grass-Rendering/build/src/shaders/graphics.vert.spv", logicalDevice);
-    VkShaderModule fragShaderModule = ShaderModule::Create("C:/Users/Fan/source/repos/Grass-Rendering/build/src/shaders/graphics.frag.spv", logicalDevice);
+    VkShaderModule vertShaderModule = ShaderModule::Create(std::string(BUILD_DIR) + "/src/shaders/graphics.vert.spv", logicalDevice);
+    VkShaderModule fragShaderModule = ShaderModule::Create(std::string(BUILD_DIR) + "/src/shaders/graphics.frag.spv", logicalDevice);
 
     // Assign each shader module to the appropriate stage in the pipeline
     VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
@@ -697,10 +698,10 @@ void Renderer::CreateGraphicsPipeline() {
 
 void Renderer::CreateGrassPipeline() {
     // --- Set up programmable shaders ---
-    VkShaderModule vertShaderModule = ShaderModule::Create("C:/Users/Fan/source/repos/Grass-Rendering/build/src/shaders/grass.vert.spv", logicalDevice);
-    VkShaderModule tescShaderModule = ShaderModule::Create("C:/Users/Fan/source/repos/Grass-Rendering/build/src/shaders/grass.tesc.spv", logicalDevice);
-    VkShaderModule teseShaderModule = ShaderModule::Create("C:/Users/Fan/source/repos/Grass-Rendering/build/src/shaders/grass.tese.spv", logicalDevice);
-    VkShaderModule fragShaderModule = ShaderModule::Create("C:/Users/Fan/source/repos/Grass-Rendering/build/src/shaders/grass.frag.spv", logicalDevice);
+    VkShaderModule vertShaderModule = ShaderModule::Create(std::string(BUILD_DIR) + "/src/shaders/grass.vert.spv", logicalDevice);
+    VkShaderModule tescShaderModule = ShaderModule::Create(std::string(BUILD_DIR) + "/src/shaders/grass.tesc.spv", logicalDevice);
+    VkShaderModule teseShaderModule = ShaderModule::Create(std::string(BUILD_DIR) + "/src/shaders/grass.tese.spv", logicalDevice);
+    VkShaderModule fragShaderModule = ShaderModule::Create(std::string(BUILD_DIR) + "/src/shaders/grass.frag.spv", logicalDevice);
 
     // Assign each shader module to the appropriate stage in the pipeline
     VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
@@ -882,7 +883,7 @@ void Renderer::CreateGrassPipeline() {
 
 void Renderer::CreateComputePipeline() {
     // Set up programmable shaders
-    VkShaderModule computeShaderModule = ShaderModule::Create("C:/Users/Fan/source/repos/Grass-Rendering/build/src/shaders/compute.comp.spv", logicalDevice);
+    VkShaderModule computeShaderModule = ShaderModule::Create(std::string(BUILD_DIR) + "/src/shaders/compute.comp.spv", logicalDevice);
 
     VkPipelineShaderStageCreateInfo computeShaderStageInfo = {};
     computeShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;

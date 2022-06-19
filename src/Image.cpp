@@ -194,9 +194,9 @@ void Image::CopyFromBuffer(Device* device, VkCommandPool commandPool, VkBuffer b
     vkFreeCommandBuffers(device->GetVkDevice(), commandPool, 1, &commandBuffer);
 }
 
-void Image::FromFile(Device* device, VkCommandPool commandPool, const char* path, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageLayout layout, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
+void Image::FromFile(Device* device, VkCommandPool commandPool, std::string path, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkImageLayout layout, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
     int texWidth, texHeight, texChannels;
-    stbi_uc* pixels = stbi_load(path, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    stbi_uc* pixels = stbi_load(path.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
     VkDeviceSize imageSize = texWidth * texHeight * 4;
 
     if (!pixels) {
